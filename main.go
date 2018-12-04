@@ -63,9 +63,14 @@ func main() {
 		}),
 	}
 	// determine where the line breaks in the text need to be
-	textsplit := []string{""}
+	words := strings.Split(text, " ")
+	textsplit := []string{}
 	i := 0
-	for _, word := range strings.Split(text, " ") {
+	for _, word := range words {
+		if len(textsplit) == 0 {
+			textsplit = append(textsplit, word)
+			continue
+		}
 		linelength := d.MeasureString(textsplit[i] + word).Round()
 		if linelength >= maxLineWidth {
 			i++
