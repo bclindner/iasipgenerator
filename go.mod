@@ -1,4 +1,4 @@
-module github.com/bclindner/iasip-generator/v1.0
+module github.com/bclindner/iasip-generator
 
 require (
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
