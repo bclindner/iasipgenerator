@@ -20,6 +20,8 @@ const (
 	fontsize     = 120
 	linepadding  = 32
 	dpi          = 72
+	offsetX      = -32 // it's off to the left so i'm just gonna fix it like this cuz i'm lazy LMAO
+	offsetY      = 0
 	maxLineWidth = 1800 // anything higher results in weirdness
 )
 
@@ -79,7 +81,7 @@ func main() {
 	for line := 0; line < lines; line++ {
 		linelength := d.MeasureString(textsplit[line]).Round()
 		y := ((height - ((fontsize + linepadding) * lines)) / 2) + ((fontsize + linepadding) * (line + 1)) - linepadding
-		d.Dot = freetype.Pt((width-linelength)/2, y)
+		d.Dot = freetype.Pt((width-linelength)/2+offsetX, y+offsetY)
 		d.DrawString(textsplit[line])
 	}
 	// write image to disk
