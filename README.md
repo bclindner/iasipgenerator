@@ -1,5 +1,7 @@
 # IASIP Title Card Generator
 
+![](https://i.imgur.com/BcPsMe1.png)
+
 This is a simple [Go](https://golang.org) program that generates title cards similar to those from
 [It's Always Sunny in Philadelphia](https://en.wikipedia.org/wiki/It%27s_Always_Sunny_in_Philadelphia).
 I wrote this in a few hours to learn Go a little better (and to make IASIP title cards super easy to
