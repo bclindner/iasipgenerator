@@ -9,19 +9,27 @@ import (
 	"image/png"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 func centered(size int) int { return (1920 - size) / 2 }
 
 const (
-	width       = 1920
-	height      = 1080
-	fontsize    = 120
-	linepadding = 32
-	dpi         = 72
+	width        = 1920
+	height       = 1080
+	fontsize     = 120
+	linepadding  = 32
+	dpi          = 72
+	maxLineWidth = 1800 // anything higher results in weirdness
 )
 
 func main() {
+	// make sure there's more than one argument
+	if len(os.Args) < 2 {
+		fmt.Println("No text specified, exiting.")
+		os.Exit(1)
+	}
+	text := os.Args[1]
 	// open file to write image to
 	file, err := os.OpenFile("out.png", os.O_WRONLY|os.O_CREATE, 0655)
 	if err != nil {
@@ -44,7 +52,7 @@ func main() {
 			img.Set(x, y, image.Black)
 		}
 	}
-	// draw text, centered, on the image
+	// instantiate text drawer
 	d := &font.Drawer{
 		Dst: img,
 		Src: image.White,
@@ -54,13 +62,25 @@ func main() {
 			Hinting: font.HintingFull,
 		}),
 	}
-	lines := len(os.Args) - 1
-	for line := 1; line < lines+1; line++ {
-		linelength := d.MeasureString(os.Args[line]).Round() // rounding is fine for this
-		y := ((height - ((fontsize + linepadding) * lines)) / 2) + ((fontsize + linepadding) * (line)) - linepadding
+	// determine where the line breaks in the text need to be
+	textsplit := []string{""}
+	i := 0
+	for _, word := range strings.Split(text, " ") {
+		linelength := d.MeasureString(textsplit[i] + word).Round()
+		if linelength >= maxLineWidth {
+			i++
+			textsplit = append(textsplit, "")
+		}
+		textsplit[i] += " " + word
+	}
+	// write the text to the image
+	lines := len(textsplit)
+	fmt.Printf("Split into %d lines\n", lines)
+	for line := 0; line < lines; line++ {
+		linelength := d.MeasureString(textsplit[line]).Round()
+		y := ((height - ((fontsize + linepadding) * lines)) / 2) + ((fontsize + linepadding) * (line + 1)) - linepadding
 		d.Dot = freetype.Pt((width-linelength)/2, y)
-		d.DrawString(os.Args[line])
-		fmt.Printf("Line %d size: %d pixels\n", line, linelength)
+		d.DrawString(textsplit[line])
 	}
 	// write image to disk
 	err = png.Encode(file, img)
