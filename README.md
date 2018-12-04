@@ -14,10 +14,7 @@ The font has not been included with this repository for licensing reasons.
 Once you're done with that, open a terminal window. go to the directory of the files, and type:
 
 ```
-./iasip_generator "\"The Gang Creates an" "IASIP Title Card\""
+./iasip-generator "\"The Gang Creates an IASIP Title Card\""
 ```
 
 The output will be saved to `out.png` in the same folder.
-
-Currently you have to put your text in line-by-line - there's no way to do automatic line breaks yet.
-Working on that now.
