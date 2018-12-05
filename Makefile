@@ -1,5 +1,5 @@
 VERSION:=$(shell git describe --tags)
-PACKAGENAME=iasip-generator
+PACKAGENAME=iasipgenerator
 default:
 	mkdir -p bin
 	GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o bin/${PACKAGENAME}_$(VERSION)_linux_x64

@@ -1,4 +1,6 @@
+iasipgenerator*
 iasip-generator*
 bin/
 *.png
 textile.ttf
+vendor/
