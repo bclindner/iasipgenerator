@@ -12,40 +12,25 @@ import (
 	"strings"
 )
 
-func centered(size int) int { return (1920 - size) / 2 }
-
 const (
 	width        = 1920
 	height       = 1080
 	fontsize     = 120
 	linepadding  = 32
 	dpi          = 72
-	maxLineWidth = 1800 // anything higher results in weirdness
+	maxLineWidth = 1800
 )
 
-func main() {
-	// make sure there's more than one argument
-	if len(os.Args) < 2 {
-		fmt.Println("No text specified, exiting.")
-		os.Exit(1)
-	}
-	text := os.Args[1]
-	// open file to write image to
-	file, err := os.OpenFile("out.png", os.O_WRONLY|os.O_CREATE, 0655)
-	if err != nil {
-		fmt.Println("Couldn't open output file")
-		os.Exit(1)
-	}
-	// open Textile font
+// GenerateIASIPCard generates a title card similar to the ones from It's Always Sunny in Philadelphia.
+func GenerateIASIPCard(title string) (img *image.RGBA, err error) {
+	// ensure textile.ttf is available
 	fontfile, err := ioutil.ReadFile("textile.ttf")
 	if err != nil {
-		fmt.Println("Couldn't find textile.ttf")
-		os.Exit(1)
+		return img, fmt.Errorf("Couldn't find textile.ttf")
 	}
 	f, err := freetype.ParseFont(fontfile)
-	defer file.Close()
 	// create the image
-	img := image.NewRGBA(image.Rect(0, 0, width, height))
+	img = image.NewRGBA(image.Rect(0, 0, width, height))
 	// fill image with black
 	for x := 0; x < img.Bounds().Dx(); x++ {
 		for y := 0; y < img.Bounds().Dy(); y++ {
@@ -63,7 +48,7 @@ func main() {
 		}),
 	}
 	// determine where the line breaks in the text need to be
-	words := strings.Split(text, " ")
+	words := strings.Split(title, " ")
 	textsplit := []string{}
 	i := 0
 	for _, word := range words {
@@ -88,6 +73,22 @@ func main() {
 		d.Dot = freetype.Pt((width-linelength)/2, y)
 		d.DrawString(textsplit[line])
 	}
+	return img, nil
+}
+
+func main() {
+	// make sure there's more than one argument
+	if len(os.Args) < 2 {
+		fmt.Println("No text specified, exiting.")
+		os.Exit(1)
+	}
+	// open file to write image to
+	file, err := os.OpenFile("out.png", os.O_WRONLY|os.O_CREATE, 0655)
+	if err != nil {
+		fmt.Println("Couldn't open output file")
+		os.Exit(1)
+	}
+	img, err := GenerateIASIPCard(os.Args[1])
 	// write image to disk
 	err = png.Encode(file, img)
 	if err != nil {
