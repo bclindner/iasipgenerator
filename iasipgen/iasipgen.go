@@ -1,7 +1,6 @@
-package iasip
+package iasipgen
 
 import (
-	"fmt"
 	"github.com/golang/freetype"
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
@@ -19,8 +18,9 @@ const (
 	maxLineWidth = 1800
 )
 
-// GenerateIASIPCard generates a title card similar to the ones from It's Always Sunny in Philadelphia.
-func GenerateIASIPCard(title string) (img *image.RGBA, err error) {
+// Generate generates a title card similar to the ones from It's Always Sunny in Philadelphia.
+// Needs textile.ttf in the same directory as the executable to work.
+func Generate(title string) (img *image.RGBA, err error) {
 	// ensure textile.ttf is available
 	fontfile, err := ioutil.ReadFile("textile.ttf")
 	if err != nil {
@@ -64,7 +64,6 @@ func GenerateIASIPCard(title string) (img *image.RGBA, err error) {
 	}
 	// write the text to the image
 	lines := len(textsplit)
-	fmt.Printf("Split into %d lines\n", lines)
 	for line := 0; line < lines; line++ {
 		linelength := d.MeasureString(textsplit[line]).Round()
 		y := ((height - ((fontsize + linepadding) * lines)) / 2) + ((fontsize + linepadding) * (line + 1)) - linepadding

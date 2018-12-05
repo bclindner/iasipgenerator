@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/bclindner/iasip-generator/generator"
+	"github.com/bclindner/iasip-generator/iasipgen"
 	"image/png"
 	"os"
 )
@@ -19,7 +19,7 @@ func main() {
 		fmt.Println("Couldn't open output file")
 		os.Exit(1)
 	}
-	img, err := iasip.GenerateIASIPCard(os.Args[1])
+	img, err := iasipgen.Generate(os.Args[1])
 	// write image to disk
 	err = png.Encode(file, img)
 	if err != nil {
