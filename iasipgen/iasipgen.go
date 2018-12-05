@@ -1,6 +1,7 @@
 package iasipgen
 
 import (
+	"errors"
 	"github.com/golang/freetype"
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
@@ -24,7 +25,7 @@ func Generate(title string) (img *image.RGBA, err error) {
 	// ensure textile.ttf is available
 	fontfile, err := ioutil.ReadFile("textile.ttf")
 	if err != nil {
-		return img, fmt.Errorf("Couldn't find textile.ttf")
+		return img, errors.New("Couldn't find textile.ttf")
 	}
 	f, err := freetype.ParseFont(fontfile)
 	// create the image

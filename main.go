@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/bclindner/iasip-generator/iasipgen"
+	"github.com/bclindner/iasipgenerator/iasipgen"
 	"image/png"
 	"os"
 )
