@@ -19,15 +19,29 @@ const (
 	maxLineWidth = 1800
 )
 
-// Generate generates a title card similar to the ones from It's Always Sunny in Philadelphia.
-// Needs textile.ttf in the same directory as the executable to work.
-func Generate(title string) (img *image.RGBA, err error) {
+var textile *truetype.Font
+
+// LoadFont loads the Textile font for use in the generator.
+// This must be done before Generate.
+func LoadFont(path string) error {
 	// ensure textile.ttf is available
-	fontfile, err := ioutil.ReadFile("textile.ttf")
+	fontfile, err := ioutil.ReadFile(path)
 	if err != nil {
-		return img, errors.New("Couldn't find textile.ttf")
+		return errors.New("Couldn't load font: " + err.Error())
 	}
-	f, err := freetype.ParseFont(fontfile)
+	textile, err = freetype.ParseFont(fontfile)
+	if err != nil {
+		return errors.New("Couldn't parse font: " + err.Error())
+	}
+	if textile == nil {
+		return errors.New("Couldn't parse font: font still appears to be nil")
+	}
+	return nil
+}
+
+// Generate generates a title card similar to the ones from It's Always Sunny in Philadelphia.
+// LoadFont must be called before Generate or else the function will error out.
+func Generate(title string) (img *image.RGBA, err error) {
 	// create the image
 	img = image.NewRGBA(image.Rect(0, 0, width, height))
 	// fill image with black
@@ -40,7 +54,7 @@ func Generate(title string) (img *image.RGBA, err error) {
 	d := &font.Drawer{
 		Dst: img,
 		Src: image.White,
-		Face: truetype.NewFace(f, &truetype.Options{
+		Face: truetype.NewFace(textile, &truetype.Options{
 			Size:    fontsize,
 			DPI:     dpi,
 			Hinting: font.HintingFull,
