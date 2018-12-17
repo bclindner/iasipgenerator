@@ -19,7 +19,7 @@ func main() {
 		fmt.Println("Couldn't open output file:", err)
 		os.Exit(1)
 	}
-	err = iasipgen.LoadFont("txtile.ttf")
+	err = iasipgen.LoadFont("textile.ttf")
 	if err != nil {
 		fmt.Println("Couldn't load font:", err)
 		os.Exit(1)
