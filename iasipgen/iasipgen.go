@@ -60,6 +60,7 @@ func Generate(title string) (img *image.RGBA, err error) {
 			Hinting: font.HintingFull,
 		}),
 	}
+	title = strings.Replace(title, "\n", " ", -1)
 	// determine where the line breaks in the text need to be
 	words := strings.Split(title, " ")
 	textsplit := []string{}
