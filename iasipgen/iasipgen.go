@@ -16,7 +16,7 @@ const (
 	fontsize     = 120
 	linepadding  = 32
 	dpi          = 72
-	maxLineWidth = 1800
+	maxLineWidth = 1700
 )
 
 var textile *truetype.Font
